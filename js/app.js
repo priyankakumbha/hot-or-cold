@@ -1,10 +1,12 @@
 
 $(document).ready(function(){
+  var winFlag= false;
 	var randomNumber=generateRandomNumber();
   var guessCounter = 0;
   console.log("random number generated" +randomNumber);
   $(document).on("click", ".new", function(){
    startNewGame();
+   winFlag=false;
    guessCounter= 0;
    randomNumber=generateRandomNumber();
    console.log("random number generated new game" +randomNumber);
@@ -17,13 +19,21 @@ $(document).ready(function(){
 	  event.preventDefault();
 		var guessNumberString= $("#userGuess").val();
     var guessNumber= +guessNumberString;
-    if(isNaN(guessNumber)) {
+    console.log(winFlag);
+    if(winFlag){ 
+      $( "#feedback" ).text("you already won the game, start new game");
+
+    }else if(isNaN(guessNumber)) {
     $( "#feedback" ).text("please enter a valid number");
     } else{
 		console.log("guessnumber" +guessNumber);
     console.log("randomNumber *" +randomNumber);
 		var guessDifference = randomNumber-guessNumber;
+
     var hotcoldResult= checkTemperature(guessDifference);
+    if(hotcoldResult=="you got it"){
+      winFlag= true;
+    }
     guessCounter= guessCounter + 1;
     console.log(hotcoldResult );
     setFeedback(hotcoldResult);
@@ -48,9 +58,8 @@ $(document).ready(function(){
 function checkTemperature(guessDifference){
    var resultstring='' ;
    if(guessDifference==0){
-     
-     
-      resultstring="you got it";
+     resultstring="you got it";
+      
    } else if(guessDifference>0 &&guessDifference<=10){
    
    	resultstring="you are very hot";
